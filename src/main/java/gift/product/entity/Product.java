@@ -2,6 +2,11 @@ package gift.product.entity;
 
 import gift.product.dto.ProductCreateRequestDto;
 import gift.product.dto.ProductUpdateRequestDto;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -9,17 +14,22 @@ import jakarta.validation.constraints.PositiveOrZero;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 
+@Entity
 public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
     @Length(max = 15)
     @Pattern(regexp = "[0-9a-zA-Zㄱ-ㅎ가-힣 ()\\[\\]+\\-&/_]+")
+    @Column(nullable = false)
     private String name;
 
     @NotNull
     @PositiveOrZero
+    @Column(nullable = false)
     private Long price;
 
     @URL
@@ -37,6 +47,12 @@ public class Product {
 
     public Product(Long id, ProductCreateRequestDto dto) {
         this.id = id;
+        this.name = dto.name();
+        this.price = dto.price();
+        this.imageUrl = dto.imageUrl();
+    }
+
+    public Product(ProductCreateRequestDto dto) {
         this.name = dto.name();
         this.price = dto.price();
         this.imageUrl = dto.imageUrl();

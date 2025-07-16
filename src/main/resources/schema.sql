@@ -1,4 +1,4 @@
-CREATE TABLE product
+CREATE TABLE IF NOT EXISTS product
 (
     id        BIGINT AUTO_INCREMENT PRIMARY KEY,
     name      VARCHAR(255) NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE product
     image_url VARCHAR(255)
 );
 
-CREATE TABLE member
+CREATE TABLE IF NOT EXISTS member
 (
     uuid       CHAR(36) PRIMARY KEY,
     email      VARCHAR(255) NOT NULL UNIQUE,
@@ -16,7 +16,7 @@ CREATE TABLE member
     updated_at DATETIME     NOT NULL
 );
 
-CREATE TABLE refresh_token
+CREATE TABLE IF NOT EXISTS refresh_token
 (
     token           CHAR(32) PRIMARY KEY,
     member_uuid     CHAR(36) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE refresh_token
 );
 
 
-CREATE TABLE wishlist_item
+CREATE TABLE IF NOT EXISTS wishlist_item
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
     member_uuid CHAR(36) NOT NULL,

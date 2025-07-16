@@ -1,15 +1,19 @@
 package gift.token.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Entity
 public class RefreshToken {
 
     public static final Duration TTL = Duration.ofDays(365);
 
+    @Id
     @NotBlank
     private String token;
 

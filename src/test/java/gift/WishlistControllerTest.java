@@ -7,7 +7,7 @@ import gift.exception.ErrorStatus;
 import gift.member.dto.MemberLoginRequestDto;
 import gift.member.dto.MemberLoginResponseDto;
 import gift.member.dto.MemberRegisterRequestDto;
-import gift.wishlist.dto.WishlistItemDto;
+import gift.wishlist.dto.WishlistItemResponseDto;
 import gift.wishlist.dto.WishlistUpdateRequestDto;
 import java.util.List;
 import java.util.Objects;
@@ -81,7 +81,7 @@ public class WishlistControllerTest {
                 baseUrl,
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                new ParameterizedTypeReference<List<WishlistItemDto>>() {
+                new ParameterizedTypeReference<List<WishlistItemResponseDto>>() {
                 }
         );
 
@@ -90,13 +90,13 @@ public class WishlistControllerTest {
 
         var addRequest = new WishlistUpdateRequestDto(VALID_QUANTITY);
         restTemplate.exchange(baseUrl + "/products/" + VALID_PRODUCT_ID, HttpMethod.PUT,
-                new HttpEntity<>(addRequest, headers), WishlistItemDto.class);
+                new HttpEntity<>(addRequest, headers), WishlistItemResponseDto.class);
 
         var responseWithItem = restTemplate.exchange(
                 baseUrl,
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                new ParameterizedTypeReference<List<WishlistItemDto>>() {
+                new ParameterizedTypeReference<List<WishlistItemResponseDto>>() {
                 }
         );
 
@@ -118,7 +118,7 @@ public class WishlistControllerTest {
                 baseUrl + "/products/" + VALID_PRODUCT_ID,
                 HttpMethod.PUT,
                 entity,
-                WishlistItemDto.class
+                WishlistItemResponseDto.class
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -137,7 +137,7 @@ public class WishlistControllerTest {
         HttpEntity<WishlistUpdateRequestDto> initialEntity = new HttpEntity<>(initialRequest,
                 headers);
         restTemplate.exchange(baseUrl + "/products/" + VALID_PRODUCT_ID, HttpMethod.PUT, initialEntity,
-                WishlistItemDto.class);
+                WishlistItemResponseDto.class);
 
         int updatedQuantity = 5;
         var updateRequest = new WishlistUpdateRequestDto(updatedQuantity);
@@ -148,7 +148,7 @@ public class WishlistControllerTest {
                 baseUrl + "/products/" + VALID_PRODUCT_ID,
                 HttpMethod.PUT,
                 updateEntity,
-                WishlistItemDto.class
+                WishlistItemResponseDto.class
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -165,7 +165,7 @@ public class WishlistControllerTest {
         var addRequest = new WishlistUpdateRequestDto(VALID_QUANTITY);
         HttpEntity<WishlistUpdateRequestDto> addEntity = new HttpEntity<>(addRequest, headers);
         restTemplate.exchange(baseUrl + "/products/" + VALID_PRODUCT_ID, HttpMethod.PUT, addEntity,
-                WishlistItemDto.class);
+                WishlistItemResponseDto.class);
 
         HttpEntity<Void> deleteEntity = new HttpEntity<>(headers);
         var response = restTemplate.exchange(
@@ -182,7 +182,7 @@ public class WishlistControllerTest {
                 baseUrl,
                 HttpMethod.GET,
                 getEntity,
-                new ParameterizedTypeReference<List<WishlistItemDto>>() {
+                new ParameterizedTypeReference<List<WishlistItemResponseDto>>() {
                 }
         );
 

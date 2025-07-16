@@ -2,7 +2,7 @@ package gift.wishlist.controller;
 
 import gift.annotation.LoginMember;
 import gift.member.entity.Member;
-import gift.wishlist.dto.WishlistItemDto;
+import gift.wishlist.dto.WishlistItemResponseDto;
 import gift.wishlist.dto.WishlistUpdateRequestDto;
 import gift.wishlist.service.WishlistService;
 import jakarta.validation.Valid;
@@ -28,14 +28,14 @@ public class WishlistController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishlistItemDto>> getWishlistItems(
+    public ResponseEntity<List<WishlistItemResponseDto>> getWishlistItems(
             @LoginMember Member member) {
         var wishlistItems = wishlistService.getWishlistItems(member);
         return ResponseEntity.ok(wishlistItems);
     }
 
     @PutMapping("/products/{productId}")
-    public ResponseEntity<WishlistItemDto> upsertWishlistItem(
+    public ResponseEntity<WishlistItemResponseDto> upsertWishlistItem(
             @LoginMember Member member,
             @PathVariable Long productId,
             @Valid @RequestBody WishlistUpdateRequestDto requestDto) {

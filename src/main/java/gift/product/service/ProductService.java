@@ -25,8 +25,8 @@ public class ProductService {
     public ProductItemDto createProduct(ProductCreateRequestDto requestDto) {
         checkRestrictedWords(requestDto.name());
 
-        Long newProductId = productRepository.save(requestDto);
-        return new ProductItemDto(new Product(newProductId, requestDto));
+        Product newProduct = productRepository.save(new Product(requestDto));
+        return new ProductItemDto(newProduct);
     }
 
     @Transactional
@@ -36,8 +36,8 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_MESSAGE));
         product.update(requestDto);
-        productRepository.update(product);
-        return getProductById(id);
+        productRepository.save(product);
+        return new ProductItemDto(getProductById(id));
     }
 
     public void checkRestrictedWords(String name) {
@@ -49,7 +49,7 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long id) {
         getProductById(id);
-        productRepository.delete(id);
+        productRepository.deleteById(id);
     }
 
     public List<ProductItemDto> getProducts() {
@@ -58,13 +58,8 @@ public class ProductService {
                 .toList();
     }
 
-    public ProductItemDto getProductById(Long id) {
-        return new ProductItemDto(
-                productRepository.findById(id)
-                        .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_MESSAGE)));
-    }
-
-    public boolean existsById(Long id) {
-        return productRepository.existsById(id);
+    public Product getProductById(Long id) throws EntityNotFoundException {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_MESSAGE));
     }
 }
