@@ -52,7 +52,7 @@ public class MemberControllerTest {
 
     @Test
     void 회원가입_성공() {
-        var requestDto = new MemberRegisterRequestDto(generateUniqueValidEmail(), VALID_NAME,
+        var requestDto = MemberRegisterRequestDto.of(generateUniqueValidEmail(), VALID_NAME,
                 VALID_PW);
         var response = restTemplate.postForEntity(baseUrl, requestDto, MemberDto.class);
 
@@ -64,11 +64,11 @@ public class MemberControllerTest {
 
     @Test
     void 회원가입_실패_중복이메일() {
-        var requestDto1 = new MemberRegisterRequestDto(generateUniqueValidEmail(), VALID_NAME,
+        var requestDto1 = MemberRegisterRequestDto.of(generateUniqueValidEmail(), VALID_NAME,
                 VALID_PW);
         restTemplate.postForEntity(baseUrl, requestDto1, MemberDto.class);
 
-        var requestDto2 = new MemberRegisterRequestDto(requestDto1.email(), "홍길동", "qweqweqweqwe");
+        var requestDto2 = MemberRegisterRequestDto.of(requestDto1.email(), "홍길동", "qweqweqweqwe");
         var response = restTemplate.postForEntity(baseUrl, requestDto2,
                 ErrorResponseDto.class);
 
@@ -81,7 +81,7 @@ public class MemberControllerTest {
 
     @Test
     void 회원가입_실패_이메일_형식_오류() {
-        var requestDto = new MemberRegisterRequestDto("a   @a   .com", VALID_NAME, VALID_PW);
+        var requestDto = MemberRegisterRequestDto.of("a   @a   .com", VALID_NAME, VALID_PW);
         var response = restTemplate.postForEntity(baseUrl, requestDto, ErrorResponseDto.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -93,7 +93,7 @@ public class MemberControllerTest {
 
     @Test
     void 회원가입_실패_비밀번호_길이_부족() {
-        var requestDto = new MemberRegisterRequestDto(generateUniqueValidEmail(), VALID_NAME, "1234567");
+        var requestDto = MemberRegisterRequestDto.of(generateUniqueValidEmail(), VALID_NAME, "1234567");
         var response = restTemplate.postForEntity(baseUrl, requestDto, ErrorResponseDto.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -105,11 +105,11 @@ public class MemberControllerTest {
 
     @Test
     void 로그인_성공() {
-        var registerRequestDto = new MemberRegisterRequestDto(generateUniqueValidEmail(),
+        var registerRequestDto = MemberRegisterRequestDto.of(generateUniqueValidEmail(),
                 VALID_NAME, VALID_PW);
         restTemplate.postForEntity(baseUrl, registerRequestDto, MemberRegisterRequestDto.class);
 
-        var loginRequestDto = new MemberLoginRequestDto(registerRequestDto.email(),
+        var loginRequestDto = MemberLoginRequestDto.of(registerRequestDto.email(),
                 registerRequestDto.password());
         var loginResponse = restTemplate.postForEntity(baseUrl + "/login", loginRequestDto,
                 MemberLoginResponseDto.class);
@@ -136,11 +136,11 @@ public class MemberControllerTest {
 
     @Test
     void 로그인_실패_이메일_오류() {
-        var registerRequestDto = new MemberRegisterRequestDto(generateUniqueValidEmail(),
+        var registerRequestDto = MemberRegisterRequestDto.of(generateUniqueValidEmail(),
                 VALID_NAME, VALID_PW);
         restTemplate.postForEntity(baseUrl, registerRequestDto, MemberRegisterRequestDto.class);
 
-        var loginRequestDto = new MemberLoginRequestDto(generateUniqueValidEmail(),
+        var loginRequestDto = MemberLoginRequestDto.of(generateUniqueValidEmail(),
                 registerRequestDto.password());
         var loginResponse = restTemplate.postForEntity(baseUrl + "/login", loginRequestDto,
                 ErrorResponseDto.class);
@@ -154,11 +154,11 @@ public class MemberControllerTest {
 
     @Test
     void 로그인_실패_비밀번호_오류() {
-        var registerRequestDto = new MemberRegisterRequestDto(generateUniqueValidEmail(),
+        var registerRequestDto = MemberRegisterRequestDto.of(generateUniqueValidEmail(),
                 VALID_NAME, VALID_PW);
         restTemplate.postForEntity(baseUrl, registerRequestDto, MemberRegisterRequestDto.class);
 
-        var loginRequestDto = new MemberLoginRequestDto(registerRequestDto.email(), "PASSWORD!@");
+        var loginRequestDto = MemberLoginRequestDto.of(registerRequestDto.email(), "PASSWORD!@");
         var loginResponse = restTemplate.postForEntity(baseUrl + "/login", loginRequestDto,
                 ErrorResponseDto.class);
 
@@ -171,11 +171,11 @@ public class MemberControllerTest {
 
     @Test
     void 로그인_실패_이메일_비밀번호_오류() {
-        var registerRequestDto = new MemberRegisterRequestDto(generateUniqueValidEmail(),
+        var registerRequestDto = MemberRegisterRequestDto.of(generateUniqueValidEmail(),
                 VALID_NAME, VALID_PW);
         restTemplate.postForEntity(baseUrl, registerRequestDto, MemberRegisterRequestDto.class);
 
-        var loginRequestDto = new MemberLoginRequestDto(generateUniqueValidEmail(), "PASSWORD!@");
+        var loginRequestDto = MemberLoginRequestDto.of(generateUniqueValidEmail(), "PASSWORD!@");
         var loginResponse = restTemplate.postForEntity(baseUrl + "/login", loginRequestDto,
                 ErrorResponseDto.class);
 
@@ -188,16 +188,16 @@ public class MemberControllerTest {
 
     @Test
     void AccessToken_재발급_성공() {
-        var registerRequestDto = new MemberRegisterRequestDto(generateUniqueValidEmail(),
+        var registerRequestDto = MemberRegisterRequestDto.of(generateUniqueValidEmail(),
                 VALID_NAME, VALID_PW);
         restTemplate.postForEntity(baseUrl, registerRequestDto, MemberRegisterRequestDto.class);
 
-        var loginRequestDto = new MemberLoginRequestDto(registerRequestDto.email(),
+        var loginRequestDto = MemberLoginRequestDto.of(registerRequestDto.email(),
                 registerRequestDto.password());
         var loginResponse = restTemplate.postForEntity(baseUrl + "/login", loginRequestDto,
                 MemberLoginResponseDto.class);
 
-        var refreshAccessTokenRequestDto = new AccessTokenRefreshRequestDto(
+        var refreshAccessTokenRequestDto = AccessTokenRefreshRequestDto.of(
                 loginResponse.getBody().tokenInfo().refreshToken());
         var refreshResponse = restTemplate.postForEntity(baseUrl + "/refresh",
                 refreshAccessTokenRequestDto, AccessTokenRefreshResponseDto.class);
@@ -212,16 +212,16 @@ public class MemberControllerTest {
 
     @Test
     void AccessToken_재발급_실패_RefreshToken_오류() {
-        var registerRequestDto = new MemberRegisterRequestDto(generateUniqueValidEmail(),
+        var registerRequestDto = MemberRegisterRequestDto.of(generateUniqueValidEmail(),
                 VALID_NAME, VALID_PW);
         restTemplate.postForEntity(baseUrl, registerRequestDto, MemberRegisterRequestDto.class);
 
-        var loginRequestDto = new MemberLoginRequestDto(registerRequestDto.email(),
+        var loginRequestDto = MemberLoginRequestDto.of(registerRequestDto.email(),
                 registerRequestDto.password());
         restTemplate.postForEntity(baseUrl + "/login", loginRequestDto,
                 MemberLoginResponseDto.class);
 
-        var refreshAccessTokenRequestDto = new AccessTokenRefreshRequestDto(
+        var refreshAccessTokenRequestDto = AccessTokenRefreshRequestDto.of(
                 UUID.randomUUID().toString().replace("-", ""));
         var refreshResponse = restTemplate.postForEntity(baseUrl + "/refresh",
                 refreshAccessTokenRequestDto, ErrorResponseDto.class);

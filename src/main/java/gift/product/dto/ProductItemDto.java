@@ -10,7 +10,8 @@ public record ProductItemDto(
         String imageUrl
 ) {
 
-    public ProductItemDto(Product product) {
-        this(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    public static ProductItemDto from(Product product) {
+        return new ProductItemDto(
+                product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 }

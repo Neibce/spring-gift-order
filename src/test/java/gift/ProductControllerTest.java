@@ -46,7 +46,7 @@ public class ProductControllerTest {
 
     @Test
     public void createProduct() {
-        var requestDto = new ProductCreateRequestDto(VALID_PRODUCT_NAME, VALID_PRODUCT_PRICE,
+        var requestDto = ProductCreateRequestDto.of(VALID_PRODUCT_NAME, VALID_PRODUCT_PRICE,
                 VALID_IMAGE_URL);
         var response = postProductCreateRequest(requestDto);
 
@@ -61,19 +61,19 @@ public class ProductControllerTest {
 
     @Test
     public void createProductWithInvalidName() {
-        var requestDto = new ProductCreateRequestDto("   ", VALID_PRODUCT_PRICE, VALID_IMAGE_URL);
+        var requestDto = ProductCreateRequestDto.of("   ", VALID_PRODUCT_PRICE, VALID_IMAGE_URL);
         assertThrows(HttpClientErrorException.BadRequest.class, () -> postProductCreateRequest(requestDto));
     }
 
     @Test
     public void createProductWithInvalidPrice() {
-        var requestDto = new ProductCreateRequestDto(VALID_PRODUCT_NAME, -1L, VALID_IMAGE_URL);
+        var requestDto = ProductCreateRequestDto.of(VALID_PRODUCT_NAME, -1L, VALID_IMAGE_URL);
         assertThrows(HttpClientErrorException.BadRequest.class, () -> postProductCreateRequest(requestDto));
     }
 
     @Test
     public void getProduct() {
-        var requestDto = new ProductCreateRequestDto(VALID_PRODUCT_NAME, VALID_PRODUCT_PRICE,
+        var requestDto = ProductCreateRequestDto.of(VALID_PRODUCT_NAME, VALID_PRODUCT_PRICE,
                 VALID_IMAGE_URL);
         var createResponse = postProductCreateRequest(requestDto);
 
@@ -92,9 +92,9 @@ public class ProductControllerTest {
     @Test
     public void getProducts() {
         var product1Response = postProductCreateRequest(
-                new ProductCreateRequestDto("아이스 카페 아메리카노 T1", 4500L, VALID_IMAGE_URL));
+                ProductCreateRequestDto.of("아이스 카페 아메리카노 T1", 4500L, VALID_IMAGE_URL));
         var product2Response = postProductCreateRequest(
-                new ProductCreateRequestDto("아이스 카페 아메리카노 T2", 5000L, VALID_IMAGE_URL));
+                ProductCreateRequestDto.of("아이스 카페 아메리카노 T2", 5000L, VALID_IMAGE_URL));
 
         var response = restClient.get().uri(baseUrl)
                 .retrieve()
@@ -116,11 +116,11 @@ public class ProductControllerTest {
 
     @Test
     public void updateProduct() {
-        var createRequestDto = new ProductCreateRequestDto(VALID_PRODUCT_NAME, VALID_PRODUCT_PRICE,
+        var createRequestDto = ProductCreateRequestDto.of(VALID_PRODUCT_NAME, VALID_PRODUCT_PRICE,
                 VALID_IMAGE_URL);
         var createResponse = postProductCreateRequest(createRequestDto);
 
-        var updateRequestDto = new ProductUpdateRequestDto("아이스 카페 아메리카노 V", 6000L,
+        var updateRequestDto = ProductUpdateRequestDto.of("아이스 카페 아메리카노 V", 6000L,
                 VALID_IMAGE_URL);
 
         var updateResponse = restClient.patch()
@@ -137,7 +137,7 @@ public class ProductControllerTest {
 
     @Test
     public void deleteProduct() {
-        var requestDto = new ProductCreateRequestDto(VALID_PRODUCT_NAME, VALID_PRODUCT_PRICE,
+        var requestDto = ProductCreateRequestDto.of(VALID_PRODUCT_NAME, VALID_PRODUCT_PRICE,
                 VALID_IMAGE_URL);
         var createResponse = postProductCreateRequest(requestDto);
 

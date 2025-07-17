@@ -17,4 +17,7 @@ public record MemberRegisterRequestDto(
         String password
 ) {
 
+    public static MemberRegisterRequestDto of(String email, String name, String password) {
+        return new MemberRegisterRequestDto(email, name, password);
+    }
 }

@@ -1,5 +1,6 @@
 package gift.member.entity;
 
+import gift.common.entity.BaseEntity;
 import gift.member.dto.MemberRegisterRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,13 +8,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 @Entity
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -31,14 +31,6 @@ public class Member {
     @NotBlank
     @Column(nullable = false)
     private String name;
-
-    @NotNull
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @NotNull
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
     private static final Argon2PasswordEncoder PasswordEncoder =
             Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
@@ -66,19 +58,7 @@ public class Member {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
 }

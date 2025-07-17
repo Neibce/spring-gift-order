@@ -7,14 +7,19 @@ import java.time.LocalDateTime;
 public record WishlistItemResponseDto(
         ProductItemDto product,
         int quantity,
-        LocalDateTime addedAt
+        LocalDateTime createdAt
 ) {
 
-    public WishlistItemResponseDto(WishlistItem wishlistItem) {
-        this(
-                new ProductItemDto(wishlistItem.getProduct()),
+    public static WishlistItemResponseDto of(ProductItemDto product, int quantity,
+            LocalDateTime addedAt) {
+        return new WishlistItemResponseDto(product, quantity, addedAt);
+    }
+
+    public static WishlistItemResponseDto from(WishlistItem wishlistItem) {
+        return new WishlistItemResponseDto(
+                ProductItemDto.from(wishlistItem.getProduct()),
                 wishlistItem.getQuantity(),
-                wishlistItem.getAddedAt()
+                wishlistItem.getCreatedAt()
         );
     }
 }

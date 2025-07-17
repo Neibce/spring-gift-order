@@ -29,7 +29,7 @@ public class AdminController {
     public String adminDashboard(Model model) {
         var products = productService.getProducts();
         model.addAttribute("products", products);
-        model.addAttribute("productCreateRequestDto", new ProductCreateRequestDto("", 0L, ""));
+        model.addAttribute("productCreateRequestDto", ProductCreateRequestDto.of("", 0L, ""));
         return "admin/dashboard";
     }
 

@@ -7,6 +7,8 @@ import gift.product.dto.ProductItemDto;
 import gift.product.dto.ProductUpdateRequestDto;
 import gift.product.entity.Product;
 import gift.product.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,21 +28,19 @@ public class ProductService {
         checkRestrictedWords(requestDto.name());
 
         Product newProduct = productRepository.save(new Product(requestDto));
-        return new ProductItemDto(newProduct);
+        return ProductItemDto.from(newProduct);
     }
 
     @Transactional
     public ProductItemDto updateProduct(Long id, ProductUpdateRequestDto requestDto) {
         checkRestrictedWords(requestDto.name());
 
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_MESSAGE));
+        Product product = getProductById(id);
         product.update(requestDto);
-        productRepository.save(product);
-        return new ProductItemDto(getProductById(id));
+        return ProductItemDto.from(product);
     }
 
-    public void checkRestrictedWords(String name) {
+    private void checkRestrictedWords(String name) {
         if (name.contains("카카오")) {
             throw new MdApprovalRequiredException("'카카오'가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.");
         }
@@ -48,18 +48,28 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(Long id) {
-        getProductById(id);
+        validateProductExists(id);
         productRepository.deleteById(id);
     }
 
     public List<ProductItemDto> getProducts() {
         return productRepository.findAll().stream()
-                .map(ProductItemDto::new)
+                .map(ProductItemDto::from)
                 .toList();
+    }
+
+    public Page<ProductItemDto> getProducts(Pageable pageable) {
+        return productRepository.findAll(pageable).map(ProductItemDto::from);
     }
 
     public Product getProductById(Long id) throws EntityNotFoundException {
         return productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_MESSAGE));
+    }
+
+    private void validateProductExists(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new EntityNotFoundException(PRODUCT_NOT_FOUND_MESSAGE);
+        }
     }
 }

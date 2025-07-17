@@ -37,7 +37,7 @@ public class MemberService {
 
         Member member = new Member(requestDto);
         memberRepository.save(member);
-        return new MemberDto(member);
+        return MemberDto.from(member);
     }
 
     @Transactional
@@ -49,17 +49,17 @@ public class MemberService {
             throw new InvalidCredentialsException();
         }
 
-        MemberTokenDto memberTokenDto = new MemberTokenDto(
+        MemberTokenDto memberTokenDto = MemberTokenDto.of(
                 tokenProvider.generateAccessToken(member),
                 tokenProvider.generateRefreshToken(member));
-        return new MemberLoginResponseDto(new MemberDto(member), memberTokenDto);
+        return MemberLoginResponseDto.of(MemberDto.from(member), memberTokenDto);
     }
 
     public AccessTokenRefreshResponseDto refreshAccessToken(
             AccessTokenRefreshRequestDto requestDto) {
         UUID memberUuid = tokenProvider.getMemberUuidFromRefreshToken(requestDto.refreshToken());
 
-        return new AccessTokenRefreshResponseDto(tokenProvider.generateAccessToken(findByUuid(memberUuid)));
+        return AccessTokenRefreshResponseDto.of(tokenProvider.generateAccessToken(findByUuid(memberUuid)));
     }
 
 

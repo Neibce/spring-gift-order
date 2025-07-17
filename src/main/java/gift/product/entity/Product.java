@@ -1,5 +1,6 @@
 package gift.product.entity;
 
+import gift.common.entity.BaseEntity;
 import gift.product.dto.ProductCreateRequestDto;
 import gift.product.dto.ProductUpdateRequestDto;
 import jakarta.persistence.Column;
@@ -15,7 +16,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 
 @Entity
-public class Product {
+public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,20 +37,6 @@ public class Product {
     private String imageUrl;
 
     public Product() {
-    }
-
-    public Product(Long id, String name, Long price, String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
-    public Product(Long id, ProductCreateRequestDto dto) {
-        this.id = id;
-        this.name = dto.name();
-        this.price = dto.price();
-        this.imageUrl = dto.imageUrl();
     }
 
     public Product(ProductCreateRequestDto dto) {

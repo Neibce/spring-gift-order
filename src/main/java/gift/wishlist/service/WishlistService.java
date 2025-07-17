@@ -8,8 +8,8 @@ import gift.wishlist.dto.WishlistItemResponseDto;
 import gift.wishlist.dto.WishlistUpdateRequestDto;
 import gift.wishlist.entity.WishlistItem;
 import gift.wishlist.repository.WishlistRepository;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,12 +37,12 @@ public class WishlistService {
         wishlistItem.setQuantity(requestDto.quantity());
 
         wishlistRepository.save(wishlistItem);
-        return new WishlistItemResponseDto(wishlistItem);
+        return WishlistItemResponseDto.from(wishlistItem);
     }
 
-    public List<WishlistItemResponseDto> getWishlistItems(Member member) {
-        return wishlistRepository.getWishlistItemsByMemberUuid(member.getUuid()).stream()
-                .map(WishlistItemResponseDto::new).collect(Collectors.toList());
+    public Page<WishlistItemResponseDto> getWishlistItems(Member member, Pageable pageable) {
+        return wishlistRepository.getWishlistItemsByMemberUuid(member.getUuid(), pageable)
+                .map(WishlistItemResponseDto::from);
     }
 
     @Transactional

@@ -12,8 +12,8 @@ public record MemberDto(
         LocalDateTime updatedAt
 ) {
 
-    public MemberDto(Member member) {
-        this(member.getUuid(), member.getEmail(), member.getName(), member.getCreatedAt(),
-                member.getUpdatedAt());
+    public static MemberDto from(Member member) {
+        return new MemberDto(member.getUuid(), member.getEmail(), member.getName(),
+                member.getCreatedAt(), member.getUpdatedAt());
     }
 }

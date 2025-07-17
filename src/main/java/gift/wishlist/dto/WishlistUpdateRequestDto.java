@@ -9,4 +9,7 @@ public record WishlistUpdateRequestDto(
         int quantity
 ) {
 
+    public static WishlistUpdateRequestDto of(int quantity) {
+        return new WishlistUpdateRequestDto(quantity);
+    }
 }

@@ -9,4 +9,7 @@ public record MemberLoginRequestDto(
         String password
 ) {
 
+    public static MemberLoginRequestDto of(String email, String password) {
+        return new MemberLoginRequestDto(email, password);
+    }
 }

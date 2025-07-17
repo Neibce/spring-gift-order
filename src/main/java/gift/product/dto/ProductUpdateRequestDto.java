@@ -16,4 +16,7 @@ public record ProductUpdateRequestDto(
         String imageUrl
 ) {
 
+    public static ProductUpdateRequestDto of(String name, Long price, String imageUrl) {
+        return new ProductUpdateRequestDto(name, price, imageUrl);
+    }
 }

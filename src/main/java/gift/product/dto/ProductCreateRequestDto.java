@@ -19,4 +19,7 @@ public record ProductCreateRequestDto(
         String imageUrl
 ) {
 
+    public static ProductCreateRequestDto of(String name, Long price, String imageUrl) {
+        return new ProductCreateRequestDto(name, price, imageUrl);
+    }
 }

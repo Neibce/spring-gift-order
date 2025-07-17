@@ -55,11 +55,11 @@ public class WishlistControllerTest {
     }
 
     private String getAccessToken() {
-        var registerDto = new MemberRegisterRequestDto(generateUniqueValidEmail(), VALID_NAME,
+        var registerDto = MemberRegisterRequestDto.of(generateUniqueValidEmail(), VALID_NAME,
                 VALID_PW);
         restTemplate.postForEntity(memberBaseUrl, registerDto, Object.class);
 
-        var loginDto = new MemberLoginRequestDto(registerDto.email(), registerDto.password());
+        var loginDto = MemberLoginRequestDto.of(registerDto.email(), registerDto.password());
         var loginResponse = restTemplate.postForEntity(memberBaseUrl + "/login", loginDto,
                 MemberLoginResponseDto.class);
 
@@ -88,7 +88,7 @@ public class WishlistControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEmpty();
 
-        var addRequest = new WishlistUpdateRequestDto(VALID_QUANTITY);
+        var addRequest = WishlistUpdateRequestDto.of(VALID_QUANTITY);
         restTemplate.exchange(baseUrl + "/products/" + VALID_PRODUCT_ID, HttpMethod.PUT,
                 new HttpEntity<>(addRequest, headers), WishlistItemResponseDto.class);
 
@@ -111,7 +111,7 @@ public class WishlistControllerTest {
         String accessToken = getAccessToken();
         HttpHeaders headers = createAuthHeaders(accessToken);
 
-        var requestDto = new WishlistUpdateRequestDto(VALID_QUANTITY);
+        var requestDto = WishlistUpdateRequestDto.of(VALID_QUANTITY);
         HttpEntity<WishlistUpdateRequestDto> entity = new HttpEntity<>(requestDto, headers);
 
         var response = restTemplate.exchange(
@@ -133,14 +133,14 @@ public class WishlistControllerTest {
         String accessToken = getAccessToken();
         HttpHeaders headers = createAuthHeaders(accessToken);
 
-        var initialRequest = new WishlistUpdateRequestDto(VALID_QUANTITY);
+        var initialRequest = WishlistUpdateRequestDto.of(VALID_QUANTITY);
         HttpEntity<WishlistUpdateRequestDto> initialEntity = new HttpEntity<>(initialRequest,
                 headers);
         restTemplate.exchange(baseUrl + "/products/" + VALID_PRODUCT_ID, HttpMethod.PUT, initialEntity,
                 WishlistItemResponseDto.class);
 
         int updatedQuantity = 5;
-        var updateRequest = new WishlistUpdateRequestDto(updatedQuantity);
+        var updateRequest = WishlistUpdateRequestDto.of(updatedQuantity);
         HttpEntity<WishlistUpdateRequestDto> updateEntity = new HttpEntity<>(updateRequest,
                 headers);
 
@@ -162,7 +162,7 @@ public class WishlistControllerTest {
         String accessToken = getAccessToken();
         HttpHeaders headers = createAuthHeaders(accessToken);
 
-        var addRequest = new WishlistUpdateRequestDto(VALID_QUANTITY);
+        var addRequest = WishlistUpdateRequestDto.of(VALID_QUANTITY);
         HttpEntity<WishlistUpdateRequestDto> addEntity = new HttpEntity<>(addRequest, headers);
         restTemplate.exchange(baseUrl + "/products/" + VALID_PRODUCT_ID, HttpMethod.PUT, addEntity,
                 WishlistItemResponseDto.class);
@@ -202,7 +202,7 @@ public class WishlistControllerTest {
         HttpHeaders headers = createAuthHeaders(accessToken);
 
         long nonExistentProductId = 999L;
-        var requestDto = new WishlistUpdateRequestDto(VALID_QUANTITY);
+        var requestDto = WishlistUpdateRequestDto.of(VALID_QUANTITY);
         HttpEntity<WishlistUpdateRequestDto> entity = new HttpEntity<>(requestDto, headers);
 
         var response = restTemplate.exchange(
@@ -222,7 +222,7 @@ public class WishlistControllerTest {
         String accessToken = getAccessToken();
         HttpHeaders headers = createAuthHeaders(accessToken);
 
-        var requestDto = new WishlistUpdateRequestDto(-1);
+        var requestDto = WishlistUpdateRequestDto.of(-1);
         HttpEntity<WishlistUpdateRequestDto> entity = new HttpEntity<>(requestDto, headers);
 
         var response = restTemplate.exchange(

@@ -5,4 +5,7 @@ public record MemberLoginResponseDto(
         MemberTokenDto tokenInfo
 ) {
 
+    public static MemberLoginResponseDto of(MemberDto memberDto, MemberTokenDto tokenInfo) {
+        return new MemberLoginResponseDto(memberDto, tokenInfo);
+    }
 }
