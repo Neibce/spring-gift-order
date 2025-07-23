@@ -1,13 +1,15 @@
 package gift.product.service;
 
+import gift.common.dto.PageResponseDto;
 import gift.exception.EntityNotFoundException;
 import gift.exception.MdApprovalRequiredException;
 import gift.product.dto.ProductCreateRequestDto;
 import gift.product.dto.ProductItemDto;
 import gift.product.dto.ProductUpdateRequestDto;
 import gift.product.entity.Product;
+import gift.product.option.dto.OptionCreateRequestDto;
+import gift.product.option.service.OptionService;
 import gift.product.repository.ProductRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +21,21 @@ public class ProductService {
 
     private static final String PRODUCT_NOT_FOUND_MESSAGE = "해당 상품을 찾을 수 없습니다.";
     private final ProductRepository productRepository;
+    private final OptionService optionService;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, OptionService optionService) {
         this.productRepository = productRepository;
+        this.optionService = optionService;
     }
 
     public ProductItemDto createProduct(ProductCreateRequestDto requestDto) {
         checkRestrictedWords(requestDto.name());
 
         Product newProduct = productRepository.save(new Product(requestDto));
+
+        OptionCreateRequestDto optionCreateRequestDto = OptionCreateRequestDto.from(requestDto.name(), 1);
+        optionService.createOption(newProduct.getId(), optionCreateRequestDto);
+
         return ProductItemDto.from(newProduct);
     }
 
@@ -58,8 +66,10 @@ public class ProductService {
                 .toList();
     }
 
-    public Page<ProductItemDto> getProducts(Pageable pageable) {
-        return productRepository.findAll(pageable).map(ProductItemDto::from);
+    public PageResponseDto<ProductItemDto> getProducts(Pageable pageable) {
+        return PageResponseDto.from(
+                productRepository.findAll(pageable).map(ProductItemDto::from)
+        );
     }
 
     public Product getProductById(Long id) throws EntityNotFoundException {
@@ -67,7 +77,7 @@ public class ProductService {
                 .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND_MESSAGE));
     }
 
-    private void validateProductExists(Long id) {
+    public void validateProductExists(Long id) throws EntityNotFoundException {
         if (!productRepository.existsById(id)) {
             throw new EntityNotFoundException(PRODUCT_NOT_FOUND_MESSAGE);
         }

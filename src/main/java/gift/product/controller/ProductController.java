@@ -1,13 +1,14 @@
 package gift.product.controller;
 
+import gift.common.dto.PageRequestDto;
+import gift.common.dto.PageResponseDto;
+import gift.product.enums.ProductSortField;
 import gift.product.dto.ProductCreateRequestDto;
 import gift.product.dto.ProductItemDto;
 import gift.product.dto.ProductUpdateRequestDto;
 import gift.product.service.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,10 +45,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductItemDto>> getProducts(
-            @PageableDefault(sort = "id") Pageable pageable) {
-        var productItemDtos = productService.getProducts(pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(productItemDtos);
+    public ResponseEntity<PageResponseDto<ProductItemDto>> getProducts(
+            @Valid @ModelAttribute PageRequestDto pageRequestDto) {
+        PageRequest pageable = pageRequestDto.toSafePageable(
+                ProductSortField.class, ProductSortField.NAME);
+
+        var pageResponseDto = productService.getProducts(pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(pageResponseDto);
     }
 
     @GetMapping("{id}")

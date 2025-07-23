@@ -1,5 +1,6 @@
 package gift.wishlist.service;
 
+import gift.common.dto.PageResponseDto;
 import gift.exception.EntityNotFoundException;
 import gift.member.entity.Member;
 import gift.product.entity.Product;
@@ -8,7 +9,6 @@ import gift.wishlist.dto.WishlistItemResponseDto;
 import gift.wishlist.dto.WishlistUpdateRequestDto;
 import gift.wishlist.entity.WishlistItem;
 import gift.wishlist.repository.WishlistRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,9 +40,12 @@ public class WishlistService {
         return WishlistItemResponseDto.from(wishlistItem);
     }
 
-    public Page<WishlistItemResponseDto> getWishlistItems(Member member, Pageable pageable) {
-        return wishlistRepository.getWishlistItemsByMemberUuid(member.getUuid(), pageable)
-                .map(WishlistItemResponseDto::from);
+    public PageResponseDto<WishlistItemResponseDto> getWishlistItems(
+            Member member, Pageable pageable) {
+        return PageResponseDto.from(
+                wishlistRepository.getWishlistItemsByMemberUuid(member.getUuid(), pageable)
+                        .map(WishlistItemResponseDto::from)
+        );
     }
 
     @Transactional

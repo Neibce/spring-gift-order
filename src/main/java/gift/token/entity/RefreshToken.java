@@ -32,10 +32,6 @@ public class RefreshToken extends BaseEntity {
 
     @NotNull
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @NotNull
-    @Column(nullable = false, updatable = false)
     private LocalDateTime expirationDate;
 
     public RefreshToken() {

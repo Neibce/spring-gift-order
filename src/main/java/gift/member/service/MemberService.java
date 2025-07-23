@@ -58,12 +58,13 @@ public class MemberService {
     public AccessTokenRefreshResponseDto refreshAccessToken(
             AccessTokenRefreshRequestDto requestDto) {
         UUID memberUuid = tokenProvider.getMemberUuidFromRefreshToken(requestDto.refreshToken());
+        String newAccessToken = tokenProvider.generateAccessToken(findMemberByUuid(memberUuid));
 
-        return AccessTokenRefreshResponseDto.of(tokenProvider.generateAccessToken(findByUuid(memberUuid)));
+        return AccessTokenRefreshResponseDto.of(newAccessToken);
     }
 
 
-    public Member findByUuid(UUID uuid) throws EntityNotFoundException {
+    public Member findMemberByUuid(UUID uuid) throws EntityNotFoundException {
         return memberRepository.findByUuid(uuid)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
     }

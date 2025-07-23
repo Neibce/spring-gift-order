@@ -37,6 +37,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
             throw new InvalidCredentialsException("인증이 필요합니다.");
         }
 
-        return memberService.findByUuid(tokenProvider.getMemberUuidFromAccessToken(token));
+        return memberService.findMemberByUuid(tokenProvider.getMemberUuidFromAccessToken(token));
     }
 }

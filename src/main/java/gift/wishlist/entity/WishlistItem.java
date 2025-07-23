@@ -5,7 +5,6 @@ import gift.member.entity.Member;
 import gift.product.entity.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,13 +13,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Table(
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"member_uuid", "product_id "})
+                @UniqueConstraint(columnNames = {"member_uuid", "product_id"})
         }
 )
 public class WishlistItem extends BaseEntity {
