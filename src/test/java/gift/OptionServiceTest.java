@@ -51,7 +51,7 @@ class OptionServiceTest {
         testOption1 = new Option("1번 옵션", 100, testProduct);
         testOption2 = new Option("2번 옵션", 50, testProduct);
 
-        validCreateRequest = OptionCreateRequestDto.from("3번 옵션", 30);
+        validCreateRequest = OptionCreateRequestDto.of("3번 옵션", 30);
     }
 
     @Test

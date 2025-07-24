@@ -18,7 +18,7 @@ public record OptionCreateRequestDto(
         Integer quantity
 ) {
 
-    public static OptionCreateRequestDto from(String name, Integer quantity) {
+    public static OptionCreateRequestDto of(String name, Integer quantity) {
         return new OptionCreateRequestDto(name, quantity);
     }
 }
