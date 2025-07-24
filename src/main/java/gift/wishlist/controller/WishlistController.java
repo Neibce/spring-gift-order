@@ -34,7 +34,7 @@ public class WishlistController {
     @GetMapping
     public ResponseEntity<PageResponseDto<WishlistItemResponseDto>> getWishlistItems(
             @LoginMember Member member, @Valid @ModelAttribute PageRequestDto pageRequestDto) {
-        Pageable pageable = pageRequestDto.toSafePageable(
+        Pageable pageable = pageRequestDto.toPageable(
                 WishlistItemSortField.class, WishlistItemSortField.CREATED_AT);
         var pageResponseDto = wishlistService.getWishlistItems(member, pageable);
         return ResponseEntity.ok(pageResponseDto);
