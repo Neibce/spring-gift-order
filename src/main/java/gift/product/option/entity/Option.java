@@ -45,9 +45,9 @@ public class Option {
     public Option() {
     }
 
-    public Option(Product product, OptionCreateRequestDto requestDto) {
-        this.name = requestDto.name();
-        this.quantity = requestDto.quantity();
+    public Option(String name, int quantity, Product product) {
+        this.name = name;
+        this.quantity = quantity;
         this.product = product;
     }
 

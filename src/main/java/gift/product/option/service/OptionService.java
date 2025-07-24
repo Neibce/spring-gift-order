@@ -27,7 +27,7 @@ public class OptionService {
     @Transactional
     public OptionItemDto createOption(Long productId, OptionCreateRequestDto requestDto) {
         Product product = productService.getProductById(productId);
-        Option newOption = new Option(product, requestDto);
+        Option newOption = new Option(requestDto.name(), requestDto.quantity(), product);
 
         if (optionRepository.existsByNameAndProductId(newOption.getName(), productId)) {
             throw new EntityAlreadyExistsException("이미 존재하는 옵션입니다.");

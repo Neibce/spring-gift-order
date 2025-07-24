@@ -48,8 +48,8 @@ class OptionServiceTest {
     void setUp() {
         optionService = new OptionService(optionRepository, productService);
 
-        testOption1 = new Option(testProduct, OptionCreateRequestDto.from("1번 옵션", 100));
-        testOption2 = new Option(testProduct, OptionCreateRequestDto.from("2번 옵션", 50));
+        testOption1 = new Option("1번 옵션", 100, testProduct);
+        testOption2 = new Option("2번 옵션", 50, testProduct);
 
         validCreateRequest = OptionCreateRequestDto.from("3번 옵션", 30);
     }
