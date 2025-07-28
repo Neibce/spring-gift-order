@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title>카카오 로그인</title>
+</head>
+<body>
+<h1>카카오 로그인 완료</h1>
+<img src="/images/happy_choonsik.png"/>
+<table border="1">
+  <tbody>
+  <tr>
+    <th>AccessToken</th>
+    <td th:text="${accessToken}"></td>
+  </tr>
+  <tr>
+    <th>RefreshToken</th>
+    <td th:text="${refreshToken}"></td>
+  </tr>
+  <tr>
+    <th>AccessToken Expires In</th>
+    <td th:text="${expiresIn}"></td>
+  </tr>
+  <tr>
+    <th>RefreshToken Expires In</th>
+    <td th:text="${refreshTokenExpiresIn}"></td>
+  </tbody>
+</table>
+
+</body>
+</html>

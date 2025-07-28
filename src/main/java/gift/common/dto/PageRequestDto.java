@@ -18,7 +18,7 @@ public record PageRequestDto(
         Boolean ascending
 ) {
 
-    public <T extends Enum<T> & SortField> PageRequest toSafePageable(
+    public <T extends Enum<T> & SortField> PageRequest toPageable(
             Class<T> enumClass, T defaultSortField) {
         int page = this.page != null ? this.page : 1;
         int size = this.size != null ? this.size : 10;

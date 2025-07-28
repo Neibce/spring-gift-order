@@ -1,7 +1,6 @@
 package gift.product.option.entity;
 
 import gift.product.entity.Product;
-import gift.product.option.dto.OptionCreateRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,8 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -28,16 +25,12 @@ public class Option {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @NotBlank
     @Column(nullable = false)
     private String name;
 
-    @NotNull
     @Column(nullable = false)
     private Integer quantity;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
@@ -45,9 +38,9 @@ public class Option {
     public Option() {
     }
 
-    public Option(Product product, OptionCreateRequestDto requestDto) {
-        this.name = requestDto.name();
-        this.quantity = requestDto.quantity();
+    public Option(String name, int quantity, Product product) {
+        this.name = name;
+        this.quantity = quantity;
         this.product = product;
     }
 

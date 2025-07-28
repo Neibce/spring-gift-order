@@ -47,7 +47,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<PageResponseDto<ProductItemDto>> getProducts(
             @Valid @ModelAttribute PageRequestDto pageRequestDto) {
-        PageRequest pageable = pageRequestDto.toSafePageable(
+        PageRequest pageable = pageRequestDto.toPageable(
                 ProductSortField.class, ProductSortField.NAME);
 
         var pageResponseDto = productService.getProducts(pageable);
