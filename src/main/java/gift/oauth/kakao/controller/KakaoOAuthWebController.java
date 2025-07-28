@@ -14,25 +14,31 @@ import org.springframework.web.client.HttpClientErrorException;
 @RequestMapping("/oauth/kakao")
 public class KakaoOAuthWebController {
 
-    @Value("${KAKAO_REST_API_KEY}")
+    @Value("${oauth.kakao.rest-api-key}")
     private String restApiKey;
 
-    private final String redirectUri = "http://localhost:8080/oauth/kakao/callback";
+    @Value("${oauth.kakao.redirect-uri}")
+    private String redirectUri;
+
     private final KakaoOAuthService kakaoOAuthService;
 
     public KakaoOAuthWebController(KakaoOAuthService kakaoOAuthService) {
         this.kakaoOAuthService = kakaoOAuthService;
     }
 
+    @GetMapping
+    public String showKakaoOAuthPage() {
+        return "oauth/kakao/main";
+    }
+
     @GetMapping("/login")
-    public String loginPage(Model model) {
-        model.addAttribute("restApiKey", restApiKey);
-        model.addAttribute("redirectUri", redirectUri);
-        return "oauth/kakao/login";
+    public String redirectToKakaoOAuth() {
+        return "redirect:https://kauth.kakao.com/oauth/authorize?scope=talk_message&response_type=code&client_id="
+                + restApiKey + "&redirect_uri=" + redirectUri;
     }
 
     @GetMapping("/callback")
-    public String callbackPage(@RequestParam String code, Model model) {
+    public String handleKakaoCallback(@RequestParam String code, Model model) {
         try {
             KakaoTokenResponseDto tokenResponseDto = kakaoOAuthService.getToken(code);
             model.addAttribute("accessToken", tokenResponseDto.accessToken());

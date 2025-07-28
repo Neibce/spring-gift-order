@@ -16,10 +16,12 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class KakaoOAuthService {
 
-    @Value("${KAKAO_REST_API_KEY}")
+    @Value("${oauth.kakao.rest-api-key}")
     private String restApiKey;
 
-    private final String redirectUri = "http://localhost:8080/oauth/kakao/callback";
+    @Value("${oauth.kakao.redirect-uri}")
+    private String redirectUri;
+
     private final RestTemplate restTemplate;
 
     public KakaoOAuthService(RestTemplate restTemplate) {
