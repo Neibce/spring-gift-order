@@ -45,7 +45,7 @@ public class Option {
     }
 
     public void subtract(int quantity) {
-        if (this.quantity - quantity < 1) {
+        if (this.quantity - quantity < 0) {
             throw new IllegalArgumentException("최소 1개의 수량은 남아 있어야 합니다.");
         }
         this.quantity -= quantity;

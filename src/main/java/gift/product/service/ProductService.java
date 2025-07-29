@@ -33,7 +33,7 @@ public class ProductService {
 
         Product newProduct = productRepository.save(new Product(requestDto));
 
-        OptionCreateRequestDto optionCreateRequestDto = OptionCreateRequestDto.of(requestDto.name(), 1);
+        OptionCreateRequestDto optionCreateRequestDto = OptionCreateRequestDto.of(requestDto.name(), 1_000);
         optionService.createOption(newProduct.getId(), optionCreateRequestDto);
 
         return ProductItemDto.from(newProduct);
