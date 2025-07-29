@@ -39,10 +39,10 @@ public class Product extends BaseEntity {
     public Product() {
     }
 
-    public Product(ProductCreateRequestDto dto) {
-        this.name = dto.name();
-        this.price = dto.price();
-        this.imageUrl = dto.imageUrl();
+    public Product(String name, Long price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public void update(ProductUpdateRequestDto dto) {

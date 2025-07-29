@@ -31,7 +31,8 @@ public class ProductService {
     public ProductItemDto createProduct(ProductCreateRequestDto requestDto) {
         checkRestrictedWords(requestDto.name());
 
-        Product newProduct = productRepository.save(new Product(requestDto));
+        Product newProduct = productRepository.save(
+                new Product(requestDto.name(), requestDto.price(), requestDto.imageUrl()));
 
         OptionCreateRequestDto optionCreateRequestDto = OptionCreateRequestDto.of(requestDto.name(), 1_000);
         optionService.createOption(newProduct.getId(), optionCreateRequestDto);
