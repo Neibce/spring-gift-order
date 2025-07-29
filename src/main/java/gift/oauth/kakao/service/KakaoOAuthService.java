@@ -1,6 +1,7 @@
 package gift.oauth.kakao.service;
 
 import gift.oauth.kakao.dto.KakaoTokenDto;
+import gift.oauth.kakao.dto.KakaoTokenRenewDto;
 import gift.oauth.kakao.dto.KakaoUserInfoDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -51,7 +52,8 @@ public class KakaoOAuthService {
         return response.getBody();
     }
 
-    public KakaoUserInfoDto getUserInfo(String accessToken) {
+    public KakaoUserInfoDto getUserInfo(String accessToken)
+            throws HttpClientErrorException, ResourceAccessException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBearerAuth(accessToken);
@@ -62,6 +64,27 @@ public class KakaoOAuthService {
 
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new HttpClientErrorException(response.getStatusCode(), "Kakao 요청 실패");
+        }
+        return response.getBody();
+    }
+
+    public KakaoTokenRenewDto renewToken(String refreshToken)
+            throws HttpClientErrorException, ResourceAccessException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "refresh_token");
+        body.add("client_id", restApiKey);
+        body.add("refresh_token", refreshToken);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+
+        ResponseEntity<KakaoTokenRenewDto> response = restTemplate.postForEntity(
+                "https://kauth.kakao.com/oauth/token", request, KakaoTokenRenewDto.class);
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new HttpClientErrorException(response.getStatusCode(), "Kakao OAuth token 요청 실패");
         }
         return response.getBody();
     }
