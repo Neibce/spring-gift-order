@@ -1,6 +1,7 @@
 package gift.oauth.kakao.service;
 
-import gift.oauth.kakao.dto.KakaoTokenResponseDto;
+import gift.oauth.kakao.dto.KakaoTokenDto;
+import gift.oauth.kakao.dto.KakaoUserInfoDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +29,7 @@ public class KakaoOAuthService {
         this.restTemplate = restTemplate;
     }
 
-    public KakaoTokenResponseDto getToken(String code)
+    public KakaoTokenDto getToken(String code)
             throws HttpClientErrorException, ResourceAccessException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -41,11 +42,26 @@ public class KakaoOAuthService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
-        ResponseEntity<KakaoTokenResponseDto> response = restTemplate.postForEntity(
-                "https://kauth.kakao.com/oauth/token", request, KakaoTokenResponseDto.class);
+        ResponseEntity<KakaoTokenDto> response = restTemplate.postForEntity(
+                "https://kauth.kakao.com/oauth/token", request, KakaoTokenDto.class);
 
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new HttpClientErrorException(response.getStatusCode(), "Kakao OAuth token 요청 실패");
+        }
+        return response.getBody();
+    }
+
+    public KakaoUserInfoDto getUserInfo(String accessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBearerAuth(accessToken);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
+        ResponseEntity<KakaoUserInfoDto> response = restTemplate.postForEntity(
+                "https://kapi.kakao.com/v2/user/me", request, KakaoUserInfoDto.class);
+
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new HttpClientErrorException(response.getStatusCode(), "Kakao 요청 실패");
         }
         return response.getBody();
     }

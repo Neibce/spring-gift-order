@@ -1,5 +1,6 @@
 package gift.member.service;
 
+import gift.common.util.TokenUtils;
 import gift.exception.EntityAlreadyExistsException;
 import gift.exception.EntityNotFoundException;
 import gift.exception.InvalidCredentialsException;
@@ -11,7 +12,11 @@ import gift.member.dto.MemberRegisterRequestDto;
 import gift.member.dto.MemberTokenDto;
 import gift.member.dto.AccessTokenRefreshRequestDto;
 import gift.member.entity.Member;
+import gift.member.entity.OAuthInfo;
+import gift.member.enums.AuthProvider;
 import gift.member.repository.MemberRepository;
+import gift.oauth.kakao.dto.KakaoTokenDto;
+import gift.oauth.kakao.dto.KakaoUserInfoDto;
 import gift.token.service.TokenProvider;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -35,7 +40,34 @@ public class MemberService {
             throw new EntityAlreadyExistsException("이미 가입된 계정입니다.");
         }
 
-        Member member = new Member(requestDto);
+        Member member = new Member.Builder()
+                .email(requestDto.email())
+                .name(requestDto.name())
+                .password(requestDto.password())
+                .authProvider(AuthProvider.LOCAL)
+                .build();
+
+        memberRepository.save(member);
+        return MemberDto.from(member);
+    }
+
+    @Transactional
+    public MemberDto register(KakaoUserInfoDto kakaoUserInfoDto, KakaoTokenDto kakaoTokenDto) {
+        if (memberRepository.existsByEmail(kakaoUserInfoDto.kakaoAccount().email())) {
+            throw new EntityAlreadyExistsException("이미 가입된 계정입니다.");
+        }
+
+        Member member = new Member.Builder()
+                .email(kakaoUserInfoDto.kakaoAccount().email())
+                .name(kakaoUserInfoDto.kakaoAccount().profile().nickname())
+                .password(" ")
+                .authProvider(AuthProvider.KAKAO)
+                .oAuthToken(new OAuthInfo(
+                        kakaoUserInfoDto.id(),
+                        kakaoTokenDto.refreshToken(),
+                        TokenUtils.calculateExpiryDateTime(kakaoTokenDto.expiresIn())))
+                .build();
+
         memberRepository.save(member);
         return MemberDto.from(member);
     }
@@ -55,6 +87,17 @@ public class MemberService {
         return MemberLoginResponseDto.of(MemberDto.from(member), memberTokenDto);
     }
 
+    @Transactional
+    public MemberLoginResponseDto login(KakaoUserInfoDto kakaoUserInfoDto) {
+        Member member = memberRepository.findByoAuthInfoIdAndAuthProvider(kakaoUserInfoDto.id(), AuthProvider.KAKAO)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+
+        MemberTokenDto memberTokenDto = MemberTokenDto.of(
+                tokenProvider.generateAccessToken(member),
+                tokenProvider.generateRefreshToken(member));
+        return MemberLoginResponseDto.of(MemberDto.from(member), memberTokenDto);
+    }
+
     public AccessTokenRefreshResponseDto refreshAccessToken(
             AccessTokenRefreshRequestDto requestDto) {
         UUID memberUuid = tokenProvider.getMemberUuidFromRefreshToken(requestDto.refreshToken());
@@ -63,9 +106,12 @@ public class MemberService {
         return AccessTokenRefreshResponseDto.of(newAccessToken);
     }
 
-
     public Member findMemberByUuid(UUID uuid) throws EntityNotFoundException {
         return memberRepository.findByUuid(uuid)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+    }
+
+    public boolean isMemberExistsByOAuthInfoId(Long id) {
+        return memberRepository.existsByoAuthInfoId(id);
     }
 }
