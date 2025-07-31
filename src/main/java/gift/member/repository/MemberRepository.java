@@ -16,7 +16,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByUuid(UUID uuid);
 
-    Optional<Member> findByoAuthInfoIdAndAuthProvider(Long id, AuthProvider authProvider);
+    Optional<Member> findByoAuthInfoIdAndAuthProvider(Long oAuthInfoId, AuthProvider authProvider);
 
-    boolean existsByoAuthInfoId(Long id);
+    boolean existsByoAuthInfoId(Long oAuthInfoId);
 }
