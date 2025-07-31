@@ -1,26 +1,21 @@
 package gift.oauth.kakao.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record KakaoAccountDto(
-        @JsonProperty("id")
         Long id,
-
-        @JsonProperty("email")
         String email,
-
-        @JsonProperty("profile")
         Profile profile
-
 ) {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record Profile(
-            @JsonProperty("nickname")
             String nickname
-
     ) {
 
     }
