@@ -58,7 +58,7 @@ public class OrderService {
         return OrderInfoDto.from(order);
     }
 
-    public void sendKakaoTalkMessage(Member member, Order order) {
+    private void sendKakaoTalkMessage(Member member, Order order) {
         if (member.getAuthProvider() != AuthProvider.KAKAO) {
             return;
         }
