@@ -25,15 +25,7 @@ public class KakaoOAuthController {
 
     @GetMapping("/callback")
     public ResponseEntity<MemberLoginResponseDto> handleKakaoCallback(@RequestParam String code) {
-        KakaoTokenDto kakaoTokenDto = kakaoOAuthService.getToken(code);
-        KakaoUserInfoDto kakaoUserInfoDto =
-                kakaoOAuthService.getUserInfo(kakaoTokenDto.accessToken());
-
-        if (!memberService.isMemberExistsByOAuthInfoId(kakaoUserInfoDto.id())) {
-            memberService.register(kakaoUserInfoDto, kakaoTokenDto);
-        }
-
-        var memberLoginResponseDto = memberService.login(kakaoUserInfoDto);
+        var memberLoginResponseDto = kakaoOAuthService.authenticateAndLogin(code);
         return ResponseEntity.ok(memberLoginResponseDto);
     }
 }

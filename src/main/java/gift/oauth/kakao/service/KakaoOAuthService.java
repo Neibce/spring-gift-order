@@ -1,5 +1,7 @@
 package gift.oauth.kakao.service;
 
+import gift.member.dto.MemberLoginResponseDto;
+import gift.member.service.MemberService;
 import gift.oauth.kakao.dto.KakaoTokenDto;
 import gift.oauth.kakao.dto.KakaoTokenRenewDto;
 import gift.oauth.kakao.dto.KakaoUserInfoDto;
@@ -25,9 +27,11 @@ public class KakaoOAuthService {
     private String redirectUri;
 
     private final RestTemplate restTemplate;
+    private final MemberService memberService;
 
-    public KakaoOAuthService(RestTemplate restTemplate) {
+    public KakaoOAuthService(RestTemplate restTemplate, MemberService memberService) {
         this.restTemplate = restTemplate;
+        this.memberService = memberService;
     }
 
     public KakaoTokenDto getToken(String code)
@@ -66,6 +70,16 @@ public class KakaoOAuthService {
             throw new HttpClientErrorException(response.getStatusCode(), "Kakao 요청 실패");
         }
         return response.getBody();
+    }
+
+    public MemberLoginResponseDto authenticateAndLogin(String code) {
+        KakaoTokenDto tokenDto = getToken(code);
+        KakaoUserInfoDto userInfo = getUserInfo(tokenDto.accessToken());
+
+        if (!memberService.isMemberExistsByOAuthInfoId(userInfo.id())) {
+            memberService.register(userInfo, tokenDto);
+        }
+        return memberService.login(userInfo);
     }
 
     public KakaoTokenRenewDto renewToken(String refreshToken)
