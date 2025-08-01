@@ -1,7 +1,6 @@
 package gift.member.entity;
 
 import gift.common.entity.BaseEntity;
-import gift.member.dto.MemberRegisterRequestDto;
 import gift.member.enums.AuthProvider;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -12,7 +11,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
-import java.time.LocalDateTime;
 import java.util.UUID;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
