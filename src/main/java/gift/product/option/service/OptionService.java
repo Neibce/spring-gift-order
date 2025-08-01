@@ -46,7 +46,7 @@ public class OptionService {
     public void deleteOption(Long optionId) {
         Option option = getOptionById(optionId);
 
-        if(optionRepository.countByProductId(option.getProduct().getId()) == 1) {
+        if (optionRepository.countByProductId(option.getProduct().getId()) == 1) {
             throw new EntityNotFoundException("최소 하나의 옵션은 남아 있어야 합니다.");
         }
         optionRepository.deleteById(optionId);
@@ -58,7 +58,7 @@ public class OptionService {
         option.subtract(quantity);
     }
 
-    private Option getOptionById(Long optionId) {
+    public Option getOptionById(Long optionId) {
         return optionRepository.findById(optionId)
                 .orElseThrow(() -> new EntityNotFoundException("옵션을 찾을 수 없습니다."));
     }

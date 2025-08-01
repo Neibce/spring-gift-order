@@ -56,4 +56,13 @@ public class WishlistService {
 
         wishlistRepository.deleteByMemberUuidAndProductId(member.getUuid(), productId);
     }
+
+    @Transactional
+    public void deleteIfExists(Member member, Long productId) {
+        if (!wishlistRepository.existsByMemberUuidAndProductId(member.getUuid(), productId)) {
+            return;
+        }
+
+        wishlistRepository.deleteByMemberUuidAndProductId(member.getUuid(), productId);
+    }
 }
