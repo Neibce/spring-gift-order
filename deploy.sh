@@ -7,7 +7,7 @@ git checkout step3
 git fetch origin
 git reset --hard origin/step3
 
-./gradlew clean build -x test
+./gradlew clean build
 
 BUILD_PATH=$(ls $PROJECT_ROOT/build/libs/*.jar)
 JAR_NAME=$(basename $BUILD_PATH)
