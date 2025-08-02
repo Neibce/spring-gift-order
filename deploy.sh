@@ -1,11 +1,13 @@
 #!/bin/bash
 
+BRANCH=${1:-step3}
+
 PROJECT_ROOT=$(pwd)
 ENV_FILE=$PROJECT_ROOT/.env
 
-git checkout step3
+git checkout $BRANCH
 git fetch origin
-git reset --hard origin/step3
+git reset --hard origin/$BRANCH
 
 ./gradlew clean build
 
